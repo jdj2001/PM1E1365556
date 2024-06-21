@@ -1,5 +1,6 @@
 package com.example.pm1e1365556;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import Configuracion.SQLiteConexion;
 
 public class ActivityListado extends AppCompatActivity {
     private ListView listaContactos;
+    private ImageButton btnAtras;
     private Button btnCompartir, btnVerImagen, btnEliminar, btnActualizar;
     private EditText inputBusqueda;
     private SQLiteConexion dbHelper;
@@ -28,6 +31,7 @@ public class ActivityListado extends AppCompatActivity {
     private ContactoAdapter adapter;
     private int contactoSeleccionadoIndex = -1; // Índice del contacto seleccionado
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +42,7 @@ public class ActivityListado extends AppCompatActivity {
         btnVerImagen = findViewById(R.id.btnVerImagen);
         btnEliminar = findViewById(R.id.btnEliminar);
         btnActualizar = findViewById(R.id.btnActualizar);
+        btnAtras = findViewById(R.id.btnAtras);
         inputBusqueda = findViewById(R.id.inputBusqueda);
 
         dbHelper = new SQLiteConexion(this);
@@ -56,6 +61,7 @@ public class ActivityListado extends AppCompatActivity {
         btnVerImagen.setOnClickListener(v -> verImagen());
         btnEliminar.setOnClickListener(v -> eliminarContacto());
         btnActualizar.setOnClickListener(v -> actualizarContacto());
+        btnAtras.setOnClickListener(v -> regresarInicio());
     }
 
     private void mostrarDialogo(Contacto contacto) {
@@ -92,13 +98,17 @@ public class ActivityListado extends AppCompatActivity {
         listaContactos.setAdapter(adapter);
     }
 
-
     private void compartirContacto() {
         if (contactoSeleccionadoIndex != -1) {
             Contacto contacto = contactos.get(contactoSeleccionadoIndex);
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
-            String textoCompartir = "Nombre: " + contacto.getNombre() + "\nTeléfono: " + contacto.getTelefono();
+
+            String textoCompartir = "Nombre: " + contacto.getNombre() +
+                    "\nTeléfono: " + contacto.getTelefono() +
+                    "\nPaís: " + contacto.getPais() +
+                    "\nNota: " + contacto.getNota();
+
             intent.putExtra(Intent.EXTRA_TEXT, textoCompartir);
             startActivity(Intent.createChooser(intent, "Compartir contacto"));
         } else {
@@ -137,5 +147,11 @@ public class ActivityListado extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Seleccione un contacto para actualizar", Toast.LENGTH_SHORT).show();
         }
+    }
+    private void regresarInicio()
+    {
+        Intent intent = new Intent(this, ActivityContacto.class);
+        startActivity(intent);
+        finish();
     }
 }
