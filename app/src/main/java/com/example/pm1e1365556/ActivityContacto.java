@@ -80,6 +80,7 @@ public class ActivityContacto extends AppCompatActivity {
         startActivityForResult(chooserIntent, REQUEST_GALLERY_PICK);
     }
 
+
     // Método para crear un intent para seleccionar imágenes desde la galería o la cámara
     private Intent getPickImageIntent() {
         Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
