@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/inputBusqueda"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Buscar contacto"
+        android:layout_margin="16dp"/>
+
+    <ListView
+        android:id="@+id/listaContactos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/inputBusqueda"
+        android:layout_above="@+id/btnCompartir"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
+
+    <Button
+        android:id="@+id/btnCompartir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compartir contacto"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btnVerImagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver imagen"
+        android:layout_above="@id/btnCompartir"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/btnEliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar contacto"
+        android:layout_above="@id/btnCompartir"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/btnActualizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Actualizar contacto"
+        android:layout_above="@id/btnCompartir"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>

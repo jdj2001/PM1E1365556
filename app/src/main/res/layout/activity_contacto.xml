@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/imagenContacto"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/default_image"
+        android:contentDescription="Contacto Imagen" />
+
+    <Button
+        android:id="@+id/btnSeleccionarImagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imagenContacto"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Seleccionar Imagen" />
+
+    <TextView
+        android:id="@+id/labelPais"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSeleccionarImagen"
+        android:layout_marginTop="16dp"
+        android:text="País"
+        android:textSize="16sp" />
+
+    <Spinner
+        android:id="@+id/spinnerPais"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/labelPais"
+        android:layout_marginTop="8dp" />
+
+    <EditText
+        android:id="@+id/inputNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerPais"
+        android:layout_marginTop="16dp"
+        android:hint="Nombre" />
+
+    <EditText
+        android:id="@+id/inputTelefono"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputNombre"
+        android:layout_marginTop="16dp"
+        android:hint="Teléfono"
+        android:inputType="phone" />
+
+    <EditText
+        android:id="@+id/inputNota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputTelefono"
+        android:layout_marginTop="16dp"
+        android:hint="Nota"
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/btnSalvar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/inputNota"
+        android:layout_marginTop="16dp"
+        android:text="Salvar Contacto" />
+
+    <Button
+        android:id="@+id/btnVerContactos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSalvar"
+        android:layout_marginTop="16dp"
+        android:text="Contactos Salvados" />
+
+</RelativeLayout>
