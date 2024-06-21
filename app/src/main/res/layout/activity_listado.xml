@@ -42,7 +42,7 @@
         android:layout_width="178dp"
         android:layout_height="41dp"
         android:layout_marginStart="21dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="305dp"
         android:text="Compartir Contacto"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,8 +54,8 @@
         android:id="@+id/btneliminar"
         android:layout_width="179dp"
         android:layout_height="40dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
         android:text="Eliminar Contacto"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btncompartir" />
@@ -68,9 +68,8 @@
         android:layout_marginEnd="21dp"
         android:text="Ver Imagen"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.615"
         app:layout_constraintStart_toEndOf="@+id/btncompartir"
-        tools:layout_editor_absoluteY="592dp" />
+        tools:layout_editor_absoluteY="616dp" />
 
     <Button
         android:id="@+id/btnactualizar"
@@ -78,5 +77,5 @@
         android:layout_height="40dp"
         android:text="Actualizar Contacto"
         tools:layout_editor_absoluteX="205dp"
-        tools:layout_editor_absoluteY="640dp" />
+        tools:layout_editor_absoluteY="674dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
