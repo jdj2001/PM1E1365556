@@ -1,81 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnatras"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/inputBusqueda"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="21dp"
-        android:text="Atrás..."
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <SearchView
-        android:id="@+id/searchView"
-        android:layout_width="371dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginEnd="21dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnatras" />
+        android:hint="Buscar contacto"
+        android:layout_margin="16dp"/>
 
     <ListView
-        android:id="@+id/listView"
-        android:layout_width="372dp"
-        android:layout_height="449dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="21dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchView" />
+        android:id="@+id/listaContactos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/inputBusqueda"
+        android:layout_above="@+id/btnCompartir"
+        android:divider="@null"
+        android:dividerHeight="0dp"/>
 
     <Button
-        android:id="@+id/btncompartir"
-        android:layout_width="178dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="305dp"
-        android:text="Compartir Contacto"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        android:id="@+id/btnCompartir"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Compartir contacto"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/btneliminar"
-        android:layout_width="176dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Eliminar Contacto"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btncompartir" />
+        android:id="@+id/btnVerImagen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver imagen"
+        android:layout_above="@id/btnCompartir"
+        android:layout_alignParentStart="true"/>
 
     <Button
-        android:id="@+id/btnver"
-        android:layout_width="187dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="21dp"
-        android:text="Ver Imagen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btncompartir"
-        tools:layout_editor_absoluteY="616dp" />
+        android:id="@+id/btnEliminar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar contacto"
+        android:layout_above="@id/btnCompartir"
+        android:layout_centerHorizontal="true"/>
 
     <Button
-        android:id="@+id/btnactualizar"
-        android:layout_width="187dp"
-        android:layout_height="40dp"
-        android:text="Actualizar Contacto"
-        tools:layout_editor_absoluteX="205dp"
-        tools:layout_editor_absoluteY="674dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:id="@+id/btnActualizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Actualizar contacto"
+        android:layout_above="@id/btnCompartir"
+        android:layout_alignParentEnd="true"/>
+
+</RelativeLayout>
