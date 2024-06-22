@@ -11,8 +11,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.util.Base64;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,7 +32,9 @@ import androidx.core.content.ContextCompat;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import Configuracion.Contacto;
 import Configuracion.SQLiteConexion;
@@ -46,6 +50,9 @@ public class ActivityContacto extends AppCompatActivity {
 
     private static final int REQUEST_CAMERA_CAPTURE = 1;
     private static final int REQUEST_GALLERY_PICK = 2;
+
+    // Mapa para almacenar la longitud del número de teléfono por país
+    private Map<String, Integer> longitudTelefonoPorPais;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +76,42 @@ public class ActivityContacto extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerPais.setAdapter(adapter);
 
-        // Configurar evento para seleccionar imagen desde la galería o la cámara
+        // Inicializar el mapa con la longitud del número de teléfono por país
+        longitudTelefonoPorPais = new HashMap<>();
+        longitudTelefonoPorPais.put("Honduras (504)", 8);
+        longitudTelefonoPorPais.put("Guatemala (502)", 8);
+        longitudTelefonoPorPais.put("El Salvador (503)", 8);
+        longitudTelefonoPorPais.put("Nicaragua (505)", 8);
+        longitudTelefonoPorPais.put("Costa Rica (506)", 8);
+        longitudTelefonoPorPais.put("Panamá (507)", 8);
+
+        // Configurar limitaciones de longitud para los EditText
+        inputNombre.setFilters(new InputFilter[]{new InputFilter.LengthFilter(50)});
+        inputNota.setFilters(new InputFilter[]{new InputFilter.LengthFilter(60)});
+
+        // Configurar listener para el Spinner de países
+        spinnerPais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String paisSeleccionado = parent.getItemAtPosition(position).toString();
+                int longitudMaxima = longitudTelefonoPorPais.get(paisSeleccionado);
+                inputTelefono.setFilters(new InputFilter[]{new InputFilter.LengthFilter(longitudMaxima)});
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Por defecto, establecer una longitud máxima
+                inputTelefono.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
+            }
+        });
+
+        // Configurar evento para seleccionar imagen
         btnSeleccionarImagen.setOnClickListener(v -> seleccionarImagen());
 
+        // Configurar evento para salvar contacto
         btnSalvar.setOnClickListener(v -> salvarContacto());
 
+        // Configurar evento para ver la lista de contactos
         btnVerContactos.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(ActivityContacto.this, ActivityListado.class);
@@ -83,6 +121,19 @@ public class ActivityContacto extends AppCompatActivity {
                 Toast.makeText(ActivityContacto.this, "Error al abrir la lista de contactos", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Liberar recursos relacionados con la imagen
+        if (imagenUri != null) {
+            // Eliminar la imagen de la galería si se capturó una nueva
+            if (imagenUri.getScheme().equals("content")) {
+                getContentResolver().delete(imagenUri, null, null);
+            }
+            imagenUri = null;
+        }
     }
 
     private void seleccionarImagen() {
@@ -97,6 +148,54 @@ public class ActivityContacto extends AppCompatActivity {
             showImagePickerDialog();
         }
     }
+    /*private void seleccionarImagen() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_CAPTURE);
+                } else {
+                    showImagePickerDialog();
+                }
+            } else {
+                showImagePickerDialog();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al seleccionar imagen", Toast.LENGTH_SHORT).show();
+        }
+    }*/
+
+    /*private void salvarContacto() {
+        try {
+            String pais = spinnerPais.getSelectedItem().toString();
+            String nombre = inputNombre.getText().toString().trim();
+            String telefono = inputTelefono.getText().toString().trim();
+            String nota = inputNota.getText().toString().trim();
+            String imagen = imagenUri != null ? imagenUri.toString() : "";
+
+            if (nombre.isEmpty() || telefono.isEmpty() || pais.isEmpty()) {
+                Toast.makeText(this, "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int longitudMaxima = longitudTelefonoPorPais.get(pais);
+            if (telefono.length() != longitudMaxima) {
+                Toast.makeText(this, "Número de teléfono no válido para " + pais, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Contacto contacto = new Contacto(0, pais, nombre, telefono, nota, imagen);
+            // Guardar contacto en la base de datos
+            dbHelper.insertarContacto(contacto);
+
+            Toast.makeText(this, "Contacto guardado", Toast.LENGTH_SHORT).show();
+            limpiarCampos();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al guardar contacto", Toast.LENGTH_SHORT).show();
+        }
+    }*/
 
     private void showImagePickerDialog() {
         String[] options = {"Seleccionar desde Galería", "Tomar Foto"};
@@ -151,12 +250,51 @@ public class ActivityContacto extends AppCompatActivity {
             }
         }
     }
+    /*protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            if (requestCode == REQUEST_CAMERA_CAPTURE) {
+                if (imagenUri != null) {
+                    try {
+                        imagenContacto.setImageURI(imagenUri);
+                        // La imagen capturada se almacena en la galería
+                        galleryAddPic();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, "Error al mostrar imagen", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else if (requestCode == REQUEST_GALLERY_PICK) {
+                if (data == null || data.getData() == null) {
+                    Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    imagenUri = data.getData();
+                    imagenContacto.setImageURI(imagenUri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error al mostrar imagen", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }*/
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(imagenUri);
         sendBroadcast(mediaScanIntent);
     }
+    /*private void galleryAddPic() {
+        try {
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(imagenUri);
+            sendBroadcast(mediaScanIntent);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error al guardar imagen en la galería", Toast.LENGTH_SHORT).show();
+        }
+    }*/
 
     private void salvarContacto() {
         String pais = spinnerPais.getSelectedItem().toString();
@@ -170,9 +308,9 @@ public class ActivityContacto extends AppCompatActivity {
             return;
         }
 
-        // Validar teléfono con expresión regular para 8 dígitos
-        if (!telefono.matches("\\d{8}")) {
-            Toast.makeText(this, "Número de teléfono no válido", Toast.LENGTH_SHORT).show();
+        int longitudMaxima = longitudTelefonoPorPais.get(pais);
+        if (telefono.length() != longitudMaxima) {
+            Toast.makeText(this, "Número de teléfono no válido para " + pais, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -191,6 +329,21 @@ public class ActivityContacto extends AppCompatActivity {
         imagenContacto.setImageResource(R.drawable.default_image);
         imagenUri = null;
     }
+    /*private void limpiarCampos() {
+        inputNombre.setText("");
+        inputTelefono.setText("");
+        inputNota.setText("");
+        imagenContacto.setImageResource(R.drawable.default_image);
+
+        // Liberar la imagen URI
+        if (imagenUri != null) {
+            // Eliminar la imagen de la galería si se capturó una nueva
+            if (imagenUri.getScheme().equals("content")) {
+                getContentResolver().delete(imagenUri, null, null);
+            }
+            imagenUri = null;
+        }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

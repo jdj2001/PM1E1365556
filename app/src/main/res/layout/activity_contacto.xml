@@ -38,14 +38,6 @@
         android:layout_marginTop="8dp" />
 
     <EditText
-        android:id="@+id/inputNombre"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/spinnerPais"
-        android:layout_marginTop="16dp"
-        android:hint="Nombre" />
-
-    <EditText
         android:id="@+id/inputTelefono"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,13 +47,24 @@
         android:inputType="phone" />
 
     <EditText
+        android:id="@+id/inputNombre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/spinnerPais"
+        android:layout_marginTop="16dp"
+        android:hint="Nombre"
+        android:maxLength="50" />
+
+    <EditText
         android:id="@+id/inputNota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/inputTelefono"
         android:layout_marginTop="16dp"
         android:hint="Nota"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine"
+        android:maxLength="60" />
+
 
     <Button
         android:id="@+id/btnSalvar"
