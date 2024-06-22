@@ -65,6 +65,7 @@ public class ActivityListado extends AppCompatActivity {
         contactos = dbHelper.obtenerContactos();
         contactosFiltrados = new ArrayList<>(contactos);
 
+
         // Configurar adaptador con contactos no filtrados
         adapter = new ContactoAdapter(this, contactosFiltrados);
         listaContactos.setAdapter(adapter);
