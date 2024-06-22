@@ -1,13 +1,13 @@
 package Configuracion;
 
 public class Contacto {
-    private int id; // Añadido el ID
+    private int id; // Identificador único del contacto
 
     private String pais;
     private String nombre;
     private String telefono;
     private String nota;
-    private String imagenUri; // Almacenamos la URI de la imagen
+    private String imagenUri; // URI de la imagen del contacto
 
     public Contacto(int id, String pais, String nombre, String telefono, String nota, String imagenUri) {
         this.id = id;
@@ -18,7 +18,7 @@ public class Contacto {
         this.imagenUri = imagenUri;
     }
 
-    // Getters y Setters
+    // Getter y Setter para el ID
     public int getId() {
         return id;
     }
@@ -27,6 +27,7 @@ public class Contacto {
         this.id = id;
     }
 
+    // Getter y Setter para el país
     public String getPais() {
         return pais;
     }
@@ -35,6 +36,7 @@ public class Contacto {
         this.pais = pais;
     }
 
+    // Getter y Setter para el nombre
     public String getNombre() {
         return nombre;
     }
@@ -43,6 +45,7 @@ public class Contacto {
         this.nombre = nombre;
     }
 
+    // Getter y Setter para el teléfono
     public String getTelefono() {
         return telefono;
     }
@@ -51,6 +54,7 @@ public class Contacto {
         this.telefono = telefono;
     }
 
+    // Getter y Setter para la nota
     public String getNota() {
         return nota;
     }
@@ -59,6 +63,7 @@ public class Contacto {
         this.nota = nota;
     }
 
+    // Getter y Setter para la URI de la imagen
     public String getImagenUri() {
         return imagenUri;
     }

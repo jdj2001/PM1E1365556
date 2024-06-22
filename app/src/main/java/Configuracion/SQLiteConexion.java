@@ -6,13 +6,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import androidx.annotation.Nullable;
-
 import java.util.ArrayList;
 
 public class SQLiteConexion extends SQLiteOpenHelper {
 
-    public SQLiteConexion(@Nullable Context context) {
+    public SQLiteConexion(Context context) {
         super(context, Trans.DBname, null, Trans.Version);
     }
 
@@ -30,6 +28,7 @@ public class SQLiteConexion extends SQLiteOpenHelper {
     }
 
     // Métodos CRUD para la tabla de contactos
+
     public void insertarContacto(Contacto contacto) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -71,6 +70,26 @@ public class SQLiteConexion extends SQLiteOpenHelper {
         return contactos;
     }
 
+    public Contacto obtenerContactoPorId(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Contacto contacto = null;
+        Cursor cursor = db.query(Trans.TableContactos, new String[]{Trans.id, Trans.pais, Trans.nombre, Trans.telefono, Trans.nota, Trans.imagenUri},
+                Trans.id + "=?", new String[]{String.valueOf(id)}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            contacto = new Contacto(
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Trans.id)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Trans.pais)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Trans.nombre)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Trans.telefono)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Trans.nota)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(Trans.imagenUri))
+            );
+            cursor.close();
+        }
+        db.close();
+        return contacto;
+    }
 
     public void eliminarContacto(int id) {
         SQLiteDatabase db = this.getWritableDatabase();

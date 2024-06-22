@@ -1,11 +1,16 @@
 package com.example.pm1e1365556;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 
@@ -22,23 +27,25 @@ public class ContactoAdapter extends ArrayAdapter<Contacto> {
         this.contactos = contactos;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        Contacto contacto = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_contacto, parent, false);
-            holder = new ViewHolder();
-            holder.tvNombre = convertView.findViewById(R.id.tvNombre);
-            holder.tvTelefono = convertView.findViewById(R.id.tvTelefono);
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_contacto, parent, false);
         }
 
-        Contacto contacto = contactos.get(position);
-        holder.tvNombre.setText(contacto.getNombre());
-        holder.tvTelefono.setText(contacto.getTelefono());
+        TextView textViewNombre = convertView.findViewById(R.id.textViewNombre);
+        ImageView imageViewContacto = convertView.findViewById(R.id.imageViewContacto);
+
+        textViewNombre.setText(contacto.getNombre());
+
+        if (contacto.getImagenUri() != null && !contacto.getImagenUri().isEmpty()) {
+            imageViewContacto.setImageURI(Uri.parse(contacto.getImagenUri()));
+        } else {
+            imageViewContacto.setImageResource(R.drawable.default_image);
+        }
 
         return convertView;
     }

@@ -65,8 +65,8 @@
 
     <Button
         android:id="@+id/btnSalvar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="172dp"
+        android:layout_height="50dp"
         android:layout_below="@id/inputNota"
         android:layout_marginTop="16dp"
         android:text="Salvar Contacto" />

@@ -21,4 +21,3 @@ public class VerImagenActivity extends AppCompatActivity {
         imageView.setImageURI(Uri.parse(imagenUri));
     }
 }
-

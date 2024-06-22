@@ -1,54 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageButton
+        android:id="@+id/btnAtras"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/baseline_arrow_back_24" />
+
     <EditText
         android:id="@+id/inputBusqueda"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Buscar contacto"
-        android:layout_margin="16dp"/>
+        android:layout_width="378dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:hint="Buscar contacto" />
 
     <ListView
         android:id="@+id/listaContactos"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="454dp"
         android:layout_below="@id/inputBusqueda"
-        android:layout_above="@+id/btnCompartir"
+        android:layout_marginTop="17dp"
         android:divider="@null"
-        android:dividerHeight="0dp"/>
+        android:dividerHeight="0dp" />
 
     <Button
         android:id="@+id/btnCompartir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Compartir contacto"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginBottom="19dp"
+        android:insetLeft="21dp"
+        android:text="Compartir contacto" />
 
     <Button
         android:id="@+id/btnVerImagen"
-        android:layout_width="wrap_content"
+        android:layout_width="186dp"
         android:layout_height="wrap_content"
-        android:text="Ver imagen"
         android:layout_above="@id/btnCompartir"
-        android:layout_alignParentStart="true"/>
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/btnEliminar"
+        android:text="Ver imagen" />
 
     <Button
         android:id="@+id/btnEliminar"
-        android:layout_width="wrap_content"
+        android:layout_width="192dp"
         android:layout_height="wrap_content"
-        android:text="Eliminar contacto"
         android:layout_above="@id/btnCompartir"
-        android:layout_centerHorizontal="true"/>
+        android:layout_marginBottom="3dp"
+        android:insetLeft="21dp"
+        android:text="Eliminar contacto" />
 
     <Button
         android:id="@+id/btnActualizar"
-        android:layout_width="wrap_content"
+        android:layout_width="182dp"
         android:layout_height="wrap_content"
-        android:text="Actualizar contacto"
         android:layout_above="@id/btnCompartir"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="-48dp"
+        android:layout_toEndOf="@+id/btnCompartir"
+        android:text="Actualizar contacto" />
 
 </RelativeLayout>

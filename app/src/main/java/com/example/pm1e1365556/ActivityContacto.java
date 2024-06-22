@@ -1,9 +1,18 @@
 package com.example.pm1e1365556;
 
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Base64;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,9 +20,15 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,53 +85,77 @@ public class ActivityContacto extends AppCompatActivity {
         });
     }
 
-
-
     private void seleccionarImagen() {
-        Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
-        chooserIntent.putExtra(Intent.EXTRA_INTENT, getPickImageIntent());
-        chooserIntent.putExtra(Intent.EXTRA_TITLE, "Seleccionar fuente de imagen");
-
-        startActivityForResult(chooserIntent, REQUEST_GALLERY_PICK);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_CAPTURE);
+            } else {
+                showImagePickerDialog();
+            }
+        } else {
+            showImagePickerDialog();
+        }
     }
 
+    private void showImagePickerDialog() {
+        String[] options = {"Seleccionar desde Galería", "Tomar Foto"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccionar Imagen");
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                // Seleccionar desde Galería
+                pickImageFromGallery();
+            } else {
+                // Tomar Foto
+                dispatchTakePictureIntent();
+            }
+        });
+        builder.show();
+    }
 
-    // Método para crear un intent para seleccionar imágenes desde la galería o la cámara
-    private Intent getPickImageIntent() {
-        Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    private void pickImageFromGallery() {
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickPhoto, REQUEST_GALLERY_PICK);
+    }
 
-        // Asegurarse de que haya una aplicación que pueda manejar la acción de captura de imágenes
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-        Intent[] intents = {cameraIntent};
-        pickIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents);
-        return pickIntent;
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, "New Picture");
+            values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+            imagenUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imagenUri);
+            startActivityForResult(takePictureIntent, REQUEST_CAMERA_CAPTURE);
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_GALLERY_PICK) {
+            if (requestCode == REQUEST_CAMERA_CAPTURE) {
+                if (imagenUri != null) {
+                    imagenContacto.setImageURI(imagenUri);
+                    // La imagen capturada se almacena en la galería
+                    galleryAddPic();
+                }
+            } else if (requestCode == REQUEST_GALLERY_PICK) {
                 if (data == null || data.getData() == null) {
-                    // Si no se seleccionó ninguna imagen
                     Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 imagenUri = data.getData();
                 imagenContacto.setImageURI(imagenUri);
-            } else if (requestCode == REQUEST_CAMERA_CAPTURE) {
-                if (data != null && data.getData() != null) {
-                    // Si se capturó una nueva imagen desde la cámara
-                    imagenUri = data.getData();
-                    imagenContacto.setImageURI(imagenUri);
-                } else {
-                    // Si no se capturó una nueva imagen (por ejemplo, cancelación)
-                    Toast.makeText(this, "Captura de imagen cancelada", Toast.LENGTH_SHORT).show();
-                }
             }
         }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(imagenUri);
+        sendBroadcast(mediaScanIntent);
     }
 
     private void salvarContacto() {
@@ -151,5 +190,17 @@ public class ActivityContacto extends AppCompatActivity {
         inputNota.setText("");
         imagenContacto.setImageResource(R.drawable.default_image);
         imagenUri = null;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CAMERA_CAPTURE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                showImagePickerDialog();
+            } else {
+                Toast.makeText(getApplicationContext(), "Acceso denegado", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
